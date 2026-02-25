@@ -205,7 +205,7 @@ check_symbol_exists(
 
 check_symbol_exists(
     getmntinfo
-    sys/mount.h
+    "sys/types.h;sys/mount.h"
     HAVE_MNTINFO)
 
 check_symbol_exists(
@@ -356,7 +356,7 @@ set(CMAKE_EXTRA_INCLUDE_FILES dirent.h)
 
 # statfs: Find whether this struct exists
 if (HAVE_STATFS_FSTYPENAME OR HAVE_STATVFS_FSTYPENAME)
-    set (STATFS_INCLUDES sys/mount.h)
+    set (STATFS_INCLUDES sys/types.h sys/mount.h)
 else ()
     set (STATFS_INCLUDES sys/statfs.h)
 endif ()

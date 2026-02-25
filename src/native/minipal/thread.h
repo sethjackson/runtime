@@ -18,6 +18,8 @@
 #include <pthread_np.h>
 #elif defined(__NetBSD__)
 #include <lwp.h>
+#elif defined(__OpenBSD__)
+#include <pthread_np.h>
 #elif defined(__HAIKU__)
 #include <kernel/OS.h>
 #endif
@@ -64,7 +66,7 @@ static inline size_t minipal_get_current_thread_id_no_cache(void)
     tid = (size_t)find_thread(NULL);
 #elif defined(__sun)
     tid = (size_t)pthread_self();
-#elif defined(__wasm)
+#elif defined(__wasm) || defined(__OpenBSD__)
     tid = (size_t)(void*)pthread_self();
 #else
 #error "Unsupported platform"
@@ -132,6 +134,9 @@ static inline int minipal_set_thread_name(pthread_t thread, const char* name)
     return pthread_setname_np(threadName);
 #elif defined(__HAIKU__)
     return rename_thread(get_pthread_thread_id(thread), threadName);
+#elif defined(__OpenBSD__)
+    pthread_set_name_np(thread, threadName);
+    return 0;
 #else
     return pthread_setname_np(thread, threadName);
 #endif

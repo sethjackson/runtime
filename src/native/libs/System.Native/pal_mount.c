@@ -13,6 +13,7 @@
 
 // Check if we should use getfsstat or /proc/mounts
 #if HAVE_MNTINFO
+#include <sys/types.h>
 #include <sys/mount.h>
 #else
 #if HAVE_SYS_STATFS_H
@@ -98,7 +99,7 @@ int32_t SystemNative_GetAllMountPoints(MountPointFound onFound, void* context)
         }
 
         // Get actual mount point information
-        count = getfsstat(mounts, (int)bufferSize, MNT_NOWAIT);
+        count = getfsstat(mounts, bufferSize, MNT_NOWAIT);
         if (count < 0)
         {
             free(mounts);
