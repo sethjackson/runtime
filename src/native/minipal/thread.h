@@ -14,12 +14,10 @@
 #if defined(__linux__)
 #include <unistd.h>
 #include <sys/syscall.h>
-#elif defined(__FreeBSD__)
+#elif defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <pthread_np.h>
 #elif defined(__NetBSD__)
 #include <lwp.h>
-#elif defined(__OpenBSD__)
-#include <pthread_np.h>
 #elif defined(__HAIKU__)
 #include <kernel/OS.h>
 #endif
@@ -134,11 +132,11 @@ static inline int minipal_set_thread_name(pthread_t thread, const char* name)
     if (thread != pthread_self()) return 0;
 
     return pthread_setname_np(threadName);
-#elif defined(__HAIKU__)
-    return rename_thread(get_pthread_thread_id(thread), threadName);
 #elif defined(__OpenBSD__)
     pthread_set_name_np(thread, threadName);
     return 0;
+#elif defined(__HAIKU__)
+    return rename_thread(get_pthread_thread_id(thread), threadName);
 #else
     return pthread_setname_np(thread, threadName);
 #endif
