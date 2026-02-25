@@ -62,11 +62,13 @@ static inline size_t minipal_get_current_thread_id_no_cache(void)
     tid = (size_t)pthread_getthreadid_np();
 #elif defined(__NetBSD__)
     tid = (size_t)_lwp_self();
+#elif defined(__OpenBSD__)
+    tid = (size_t)getthrid();
 #elif defined(__HAIKU__)
     tid = (size_t)find_thread(NULL);
 #elif defined(__sun)
     tid = (size_t)pthread_self();
-#elif defined(__wasm) || defined(__OpenBSD__)
+#elif defined(__wasm)
     tid = (size_t)(void*)pthread_self();
 #else
 #error "Unsupported platform"
